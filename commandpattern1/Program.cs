@@ -32,14 +32,27 @@ namespace commandpattern1
             // Celing fan
             var ceilingFan = new CeilingFan("Bedroom");
 
-            var ceilingFanHighCommand = new CeilingFanHighCommand(ceilingFan);
-            invoker.SetCommand(ceilingFanHighCommand);
-            invoker.ButtonPress();
-
             var celingFanLowCommand = new CeilingFanLowCommand(ceilingFan);
             invoker.SetCommand(celingFanLowCommand);
             invoker.ButtonPress();
 
+            invoker.UndoButtonPressed();
+
+            Console.WriteLine("---- Composite ----");
+
+            var partyCommands = new ICommand[]
+                                           {
+                                               new LightOnCommand(light),
+                                               new GarageDoorOpenCommand(garage),
+                                               new CeilingFanHighCommand(ceilingFan)
+                                           };
+            var compositeCommand = new CompositeCommand(partyCommands);
+            invoker.SetCommand(compositeCommand);
+
+            invoker.ButtonPress();
+
+            // Undo party
+            Console.WriteLine("---- Undoing party ----");
             invoker.UndoButtonPressed();
 
             Console.Read(); 
